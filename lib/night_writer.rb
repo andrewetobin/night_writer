@@ -57,12 +57,23 @@ class NightWriter
     line_2_as_string = line_2.join('')
     line_3_as_string = line_3.join('')
     @all_lines = [line_1_as_string, line_2_as_string, line_3_as_string]
+
+    if line_1_as_string.length > 80
+      format_long_lines
+    else
+      all_lines.join("\n")
+    end
+  end
+
+  def format_long_lines
+    excess_lines = []
+    all_lines.map do |line|
+      line[0..79]
+      excess_lines << line[80..-1]
+    end
+    @all_lines += excess_lines
     all_lines.join("\n")
   end
-end
-
-# night_writer = NightWriter.new
-# puts night_writer.translate("he")
-# puts night_writer.line_1
-# puts night_writer.line_2
-# puts night_writer.line_3
+end 
+night_writer = NightWriter.new
+night_writer.encode_file_to_braille
