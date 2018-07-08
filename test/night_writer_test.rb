@@ -11,7 +11,7 @@ class NightWriterTest < Minitest::Test
   end
 
   def test_parse_text
-    skip
+    skip #need to setup runner
     night_writer = NightWriter.new
 
     expected = ["caps", "h", "e", "l", "l", "o", " ", "caps", "w", "o", "r", "l", "d"]
@@ -25,27 +25,12 @@ class NightWriterTest < Minitest::Test
     assert_equal "0.\n..\n..", night_writer.encode_to_braille("a")
     assert_equal "0.\n00\n..", night_writer2.encode_to_braille("h")
   end
-  
-  def test_it_can_translate_one_letter
-    skip
+
+  def test_it_can_encode_upcase_letters
     night_writer = NightWriter.new
-
-    assert_equal [['0.','00','..']], night_writer.translate("h")
-  end
-
-  def test_it_two_multiple_letters
-    skip
-    night_writer = NightWriter.new
-    expected = [["0.", "00", ".."], ["0.", ".0", ".."]]
-    assert_equal expected, night_writer.translate("he")
-  end
-
-  def test_it_can_return_braille_in_grid
-    skip
-    night_writer = NightWriter.new
-    night_writer.translate("he")
-
-     night_writer.format_translation(['0.','00','..'])
+    night_writer_2 = NightWriter.new
+    assert_equal "..0.\n....\n.0..", night_writer.encode_to_braille("A")
+    assert_equal "..0.\n..00\n.0..", night_writer_2.encode_to_braille("H")
   end
 
 
