@@ -1,55 +1,46 @@
+require_relative 'file_io'
+require_relative 'braille_hash'
+
 class NightWriter
-  attr_reader :line_1, :line_2, :line_3
+  include BrailleHash
+  attr_reader :line_1, :line_2, :line_3, :file_io, :all_lines
+  attr_accessor :braille
 
   def initialize
-    @alpha_to_braille = { "a" => ['0.','..','..'],
-      "b" => ['0.','0.','..'],
-      "c" => ['00','..','..'],
-      "d" => ['00','.0','..'],
-      "e" => ['0.','.0','..'],
-      "f" => ['00','0.','..'],
-      "g" => ['00','00','..'],
-      "h" => ['0.','00','..'],
-      "i" => ['.0','0.','..'],
-      "j" => ['.0','00','..'],
-      "k" => ['0.','..','0.'],
-      "l" => ['0.','0.','0.'],
-      "m" => ['00','..','0.'],
-      "n" => ['00','.0','0.'],
-      "o" => ['0.','.0','0.'],
-      "p" => ['00','0.','0.'],
-      "q" => ['00','00','0.'],
-      "r" => ['0.','00','0.'],
-      "s" => ['.0','0.','0.'],
-      "t" => ['.0','00','0.'],
-      "u" => ['0.','..','00'],
-      "v" => ['0.','0.','00'],
-      "w" => ['.0','00','.0'],
-      "x" => ['00','..','00'],
-      "y" => ['00','.0','00'],
-      "z" => ['0.','.0','00'],
-      "!" => ['..','00','0.'],
-      "'" => ['..','..','0.'],
-      "," => ['..','0.','..'],
-      "-" => ['..','..','00'],
-      "." => ['..','00','.0'],
-      "?" => ['..','0.','00'],
-      "caps" => ['..','..','.0'],
-      " " => ['..','..','..'],
-      '#' => ['.0','.0','00']
-    }
+    @alpha_to_braille = BrailleHash.braille_hash
     @line_1 = []
     @line_2 = []
     @line_3 = []
+    @file_io = FileIO.new
+  end
+
+  def encode_file_to_braille
+    plain = file_io.read.chomp
+    @braille = encode_to_braille(plain)
+    file_io.write(braille)
+  end
+
+  def encode_to_braille(input)
+    parse_text(input)
+  end
+
+  def parse_text(text)
+    letters = text.chars
+    letters_capped = letters.map do |letter|
+      if ("A".."Z").include?(letter) && letter == letter.upcase
+        letter = "caps", "#{letter.downcase}"
+      else
+        letter
+      end
+    end.flatten
+    translate(letters_capped)
   end
 
   def translate(string)
-    letters = string.chars
-    arrays = letters.map do |letter|
+    arrays = string.map do |letter|
       @alpha_to_braille[letter]
     end
     format_translation(arrays)
-    # format_translation(value)
   end
 
   def format_translation(arrays)
@@ -58,12 +49,20 @@ class NightWriter
       @line_2 << array[1]
       @line_3 << array[2]
     end
+    format_lines
+  end
 
+  def format_lines
+    line_1_as_string = line_1.join('')
+    line_2_as_string = line_2.join('')
+    line_3_as_string = line_3.join('')
+    @all_lines = [line_1_as_string, line_2_as_string, line_3_as_string]
+    all_lines.join("\n")
   end
 end
 
-night_writer = NightWriter.new
-puts night_writer.translate("he")
-puts night_writer.line_1
-puts night_writer.line_2
-puts night_writer.line_3
+# night_writer = NightWriter.new
+# puts night_writer.translate("he")
+# puts night_writer.line_1
+# puts night_writer.line_2
+# puts night_writer.line_3
