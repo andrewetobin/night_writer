@@ -20,6 +20,18 @@ class NightWriter
     file_io.write(braille)
   end
 
+  def parse_text(text)
+    letters = text.chars
+    letters_capped = letters.map do |letter|
+      if ("A".."Z").include?(letter) && letter == letter.upcase
+        letter = "caps", "#{letter.downcase}"
+      else
+        letter
+      end
+    end.flatten
+    translate(letters_capped)
+  end
+
   def translate(string)
     letters = string.chars
     arrays = letters.map do |letter|
