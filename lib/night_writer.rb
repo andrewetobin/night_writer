@@ -20,6 +20,10 @@ class NightWriter
     file_io.write(braille)
   end
 
+  def encode_to_braille(input)
+    parse_text(input)
+  end
+
   def parse_text(text)
     letters = text.chars
     letters_capped = letters.map do |letter|
@@ -33,12 +37,10 @@ class NightWriter
   end
 
   def translate(string)
-    letters = string.chars
-    arrays = letters.map do |letter|
+    arrays = string.map do |letter|
       @alpha_to_braille[letter]
     end
     format_translation(arrays)
-    # format_translation(value)
   end
 
   def format_translation(arrays)
@@ -47,12 +49,20 @@ class NightWriter
       @line_2 << array[1]
       @line_3 << array[2]
     end
+    format_lines
+  end
 
+  def format_lines
+    line_1_as_string = line_1.join('')
+    line_2_as_string = line_2.join('')
+    line_3_as_string = line_3.join('')
+    @all_lines = [line_1_as_string, line_2_as_string, line_3_as_string]
+    all_lines.join("\n")
   end
 end
 
-night_writer = NightWriter.new
-puts night_writer.translate("he")
-puts night_writer.line_1
-puts night_writer.line_2
-puts night_writer.line_3
+# night_writer = NightWriter.new
+# puts night_writer.translate("he")
+# puts night_writer.line_1
+# puts night_writer.line_2
+# puts night_writer.line_3
