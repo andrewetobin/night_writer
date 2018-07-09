@@ -32,5 +32,15 @@ class NightReadTest < Minitest::Test
     assert_equal expected_2, nr.line_3_braille
   end
 
+  def test_format_braille_keys
+    nr = NightRead.new
+    expected = [["..", "..", ".0"], ["0.", "00", ".."], ["0.", ".0", ".."], ["0.", "0.", "0."], ["0.", "0.", "0."], ["0.", ".0", "0."], ["..", "..", ".."], ["..", "..", ".0"], [".0", "00", ".0"], ["0.", ".0", "0."], ["0.", "00", "0."], ["0.", "0.", "0."], ["00", ".0", ".."], ["..", "..", ".."], ["0.", "00", ".."], [".0", "0.", ".."]]
+    braille = "..0.0.0.0.0......00.0.0.00..0..0\n..00.00.0..0....00.0000..0..000.\n.0....0.0.0....0.00.0.0........."
+    nr.parse_braille_lines(braille)
+    assert_equal expected, nr.braille_letters
+  end
+
+  
+
 
 end
