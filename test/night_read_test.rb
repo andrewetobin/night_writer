@@ -40,7 +40,15 @@ class NightReadTest < Minitest::Test
     assert_equal expected, nr.braille_letters
   end
 
-  
+  def test_translate_to_english
+    nr = NightRead.new
+
+    braille = "0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.\n....................................\n...................................."
+    nr.parse_braille_lines(braille)
+    assert_equal "aaaaaaaaaaaaaaaaaa", nr.translate_to_english
+  end
+
+
 
 
 end

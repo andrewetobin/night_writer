@@ -3,9 +3,10 @@ require_relative 'braille_hash'
 
 class NightRead
   include BrailleHash
-  attr_reader :line_1, :line_2, :line_3, :line_1_braille, :line_2_braille, :line_3_braille, :braille_letters
+  attr_reader :line_1, :line_2, :line_3, :line_1_braille, :line_2_braille, :line_3_braille, :braille_letters, :file_io, :english
 
   def initialize
+    @file_io = FileIO.new
     @braille_to_alpha = BrailleHash.braille_hash.invert
     @line_1 = []
     @line_2 = []
@@ -41,7 +42,13 @@ class NightRead
       @braille_letters << [line_1_braille[index], line_2_braille[index], line_3_braille[index]]
       index +=1
     end
-    # translate_to_english
+    translate_to_english
+  end
+
+  def translate_to_english
+    @braille_letters.map do |letter|
+      @braille_to_alpha[letter]
+    end.join
   end
 
 
