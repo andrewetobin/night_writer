@@ -12,7 +12,6 @@ class NightWriteTest < Minitest::Test
   end
 
   def test_parse_text
-    skip #need to setup runner
     night_writer = NightWrite.new
 
     expected = ["caps", "h", "e", "l", "l", "o", " ", "caps", "w", "o", "r", "l", "d"]

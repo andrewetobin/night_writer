@@ -26,8 +26,8 @@ class NightRead
   end
 
   def encode_to_english(input)
-    parsed = parse_braille_lines(input)
-    letters_in_braille = format_braille_keys(parsed)
+    parse_braille_lines(input)
+    letters_in_braille = format_braille_keys
     letters_in_english = translate_to_english(letters_in_braille)
     capitalize(letters_in_english)
   end
@@ -49,9 +49,10 @@ class NightRead
   end
 
   def translate_to_english(letters_in_braille)
-    @braille_letters.map do |letter|
+    letters_in_english = @braille_letters.map! do |letter|
       @braille_to_alpha[letter]
     end
+    return letters_in_english
   end
 
   def capitalize(letters_in_english)
