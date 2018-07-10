@@ -3,7 +3,8 @@ require_relative 'braille_hash'
 
 class NightRead
   include BrailleHash
-  attr_reader :line_1, :line_2, :line_3, :line_1_braille, :line_2_braille, :line_3_braille, :braille_letters, :file_io, :english
+  attr_reader :braille_letters, :file_io, :english, :english_letters
+  attr_accessor :line_1, :line_2, :line_3, :line_1_braille, :line_2_braille, :line_3_braille
 
   def initialize
     @file_io = FileIO.new
@@ -15,6 +16,7 @@ class NightRead
     @line_2_braille = []
     @line_3_braille = []
     @braille_letters = []
+    @english_letters = []
   end
 
   def encode_file_to_english
@@ -24,15 +26,17 @@ class NightRead
   end
 
   def encode_to_english(input)
-    parse_braille_lines(input)
+    parsed = parse_braille_lines(input)
+    letters_in_braille = format_braille_keys(parsed)
+    letters_in_english = translate_to_english(letters_in_braille)
+    capitalize(letters_in_english)
   end
 
   def parse_braille_lines(input)
     @line_1, @line_2, @line_3 = input.split("\n")
-    format_braille_keys
   end
 
-  def format_braille_keys
+  def format_braille_keys(parsed)
     @line_1_braille = line_1.scan(/../)
     @line_2_braille = line_2.scan(/../)
     @line_3_braille = line_3.scan(/../)
@@ -42,17 +46,15 @@ class NightRead
       @braille_letters << [line_1_braille[index], line_2_braille[index], line_3_braille[index]]
       index +=1
     end
-    translate_to_english
   end
 
-  def translate_to_english
+  def translate_to_english(letters_in_braille)
     @braille_letters.map do |letter|
       @braille_to_alpha[letter]
     end
-    capitalize
   end
 
-  def capitalize
+  def capitalize(letters_in_english)
     @english_letters.map.with_index do |letter, index|
       if letter == "caps"
         letter = @english_letters[index + 1].upcase
