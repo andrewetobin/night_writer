@@ -40,12 +40,12 @@ class NightRead
     @line_1_braille = line_1.scan(/../)
     @line_2_braille = line_2.scan(/../)
     @line_3_braille = line_3.scan(/../)
-
     index = 0
     until index > line_1_braille.length - 1
       @braille_letters << [line_1_braille[index], line_2_braille[index], line_3_braille[index]]
       index +=1
     end
+    return @braille_letters
   end
 
   def translate_to_english(letters_in_braille)
@@ -55,10 +55,10 @@ class NightRead
   end
 
   def capitalize(letters_in_english)
-    @english_letters.map.with_index do |letter, index|
+    letters_in_english.map.with_index do |letter, index|
       if letter == "caps"
-        letter = @english_letters[index + 1].upcase
-        @english_letters.delete_at(index + 1)
+        letter = letters_in_english[index + 1].upcase
+        letters_in_english.delete_at(index + 1)
         letter
       else
         letter
