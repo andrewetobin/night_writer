@@ -28,7 +28,7 @@ class NightRead
   end
 
   def parse_braille_lines(input)
-    @line_1, @line_2, @line_3 = input.split(/\n/)
+    @line_1, @line_2, @line_3 = input.split("\n")
     format_braille_keys
   end
 
@@ -48,10 +48,19 @@ class NightRead
   def translate_to_english
     @braille_letters.map do |letter|
       @braille_to_alpha[letter]
-    end.join
+    end
+    capitalize
   end
 
-
-
-
+  def capitalize
+    @english_letters.map.with_index do |letter, index|
+      if letter == "caps"
+        letter = @english_letters[index + 1].upcase
+        @english_letters.delete_at(index + 1)
+        letter
+      else
+        letter
+      end
+    end.join
+  end
 end
