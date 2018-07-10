@@ -21,38 +21,38 @@ class NightWrite
   end
 
   def encode_to_braille(input)
-    parse_text(input)
+    parsed = parse_text(input)
+    braille_values = translate(parsed)
+    braille_lines = format_translation(braille_values)
+    format_lines(braille_lines)
   end
 
   def parse_text(text)
     letters = text.chars
-    letters_capped = letters.map do |letter|
+    letters.map do |letter|
       if ("A".."Z").include?(letter) && letter == letter.upcase
         letter = "caps", "#{letter.downcase}"
       else
         letter
       end
     end.flatten
-    translate(letters_capped)
   end
 
-  def translate(string)
-    arrays = string.map do |letter|
+  def translate(parsed)
+    parsed.map do |letter|
       @alpha_to_braille[letter]
     end
-    format_translation(arrays)
   end
 
-  def format_translation(arrays)
-    formated = arrays.map do |array|
+  def format_translation(braille_values)
+    formated = braille_values.map do |array|
       @line_1 << array[0]
       @line_2 << array[1]
       @line_3 << array[2]
     end
-    format_lines
   end
 
-  def format_lines
+  def format_lines(braille_lines)
     line_1_as_string = line_1.join('')
     line_2_as_string = line_2.join('')
     line_3_as_string = line_3.join('')
