@@ -23,8 +23,8 @@ class NightWrite
   def encode_to_braille(input)
     parsed = parse_text(input)
     braille_values = translate(parsed)
-    braille_lines = format_translation(braille_values)
-    format_lines(braille_lines)
+    format_translation(braille_values)
+    format_lines
   end
 
   def parse_text(text)
@@ -52,7 +52,7 @@ class NightWrite
     end
   end
 
-  def format_lines(braille_lines)
+  def format_lines
     line_1_as_string = line_1.join('')
     line_2_as_string = line_2.join('')
     line_3_as_string = line_3.join('')
