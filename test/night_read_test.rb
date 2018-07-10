@@ -6,14 +6,12 @@ require './lib/night_read'
 class NightReadTest < Minitest::Test
 
   def test_it_exists
-    skip
     nr = NightRead.new
 
     assert_instance_of NightRead, nr
   end
 
   def test_it_can_split_lines
-    skip
     nr = NightRead.new
     expected_1 = "...0.0000.0......00.0.00.0"
     expected_2 = "..000.00.000....00.0.0.00."
@@ -36,21 +34,31 @@ class NightReadTest < Minitest::Test
   end
 
   def test_format_braille_keys
-    skip
     nr = NightRead.new
-    expected = [["..", "..", ".0"], ["0.", "00", ".."], ["0.", ".0", ".."], ["0.", "0.", "0."], ["0.", "0.", "0."], ["0.", ".0", "0."], ["..", "..", ".."], ["..", "..", ".0"], [".0", "00", ".0"], ["0.", ".0", "0."], ["0.", "00", "0."], ["0.", "0.", "0."], ["00", ".0", ".."], ["..", "..", ".."], ["0.", "00", ".."], [".0", "0.", ".."]]
-    braille = "..0.0.0.0.0......00.0.0.00..0..0\n..00.00.0..0....00.0000..0..000.\n.0....0.0.0....0.00.0.0........."
+    expected = [["..", "..", ".0"], [".0", "00", "0."], [".0", "0.", ".."], ["00", "00", ".."], ["0.", ".0", ".."], ["0.", "00", "0."], ["..", "..", ".."], ["..", "..", ".0"], [".0", "00", ".0"], ["0.", ".0", "0."], ["0.", ".0", "0."], ["00", ".0", ".."], [".0", "0.", "0."]]
+    braille = "...0.0000.0......00.0.00.0\n..000.00.000....00.0.0.00.\n.00.......0....0.00.0...0."
     nr.parse_braille_lines(braille)
+    nr.format_braille_keys
     assert_equal expected, nr.braille_letters
   end
 
   def test_translate_to_english
-    skip
+    nr = NightRead.new
+    braille = "...0.0000.0......00.0.00.0\n..000.00.000....00.0.0.00.\n.00.......0....0.00.0...0."
+
+    letters_in_braille = [["..", "..", ".0"], [".0", "00", "0."], [".0", "0.", ".."], ["00", "00", ".."], ["0.", ".0", ".."], ["0.", "00", "0."], ["..", "..", ".."], ["..", "..", ".0"], [".0", "00", ".0"], ["0.", ".0", "0."], ["0.", ".0", "0."], ["00", ".0", ".."], [".0", "0.", "0."]]
+
+    nr.parse_braille_lines(braille)
+    nr.format_braille_keys
+    nr.translate_to_english(letters_in_braille)
+    assert_equal ["caps", "t", "i", "g", "e", "r", " ", "caps", "w", "o", "o", "d", "s"], nr.braille_letters
+  end
+
+  def test_capitalize
     nr = NightRead.new
 
-    braille = "0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.\n....................................\n...................................."
-    nr.parse_braille_lines(braille)
-    assert_equal "aaaaaaaaaaaaaaaaaa", nr.translate_to_english
+    letters_in_english = ["caps", "t", "i", "g", "e", "r", " ", "caps", "w", "o", "o", "d", "s"]
+    assert_equal "Tiger Woods", nr.capitalize(letters_in_english)
   end
 
 
