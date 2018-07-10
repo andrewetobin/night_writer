@@ -36,7 +36,7 @@ class NightRead
     @line_1, @line_2, @line_3 = input.split("\n")
   end
 
-  def format_braille_keys(parsed)
+  def format_braille_keys
     @line_1_braille = line_1.scan(/../)
     @line_2_braille = line_2.scan(/../)
     @line_3_braille = line_3.scan(/../)
