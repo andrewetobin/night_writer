@@ -28,9 +28,41 @@ class NightWriteTest < Minitest::Test
 
   def test_it_can_encode_upcase_letters
     night_writer = NightWrite.new
-    night_writer_2 = NightWrite.new
+    # night_writer_2 = NightWrite.new
     assert_equal "..0.\n....\n.0..", night_writer.encode_to_braille("A")
-    assert_equal "..0.\n..00\n.0..", night_writer_2.encode_to_braille("H")
+    assert_equal "..0.\n..00\n.0..", night_writer.encode_to_braille("H")
+  end
+
+  def test_format_translation
+    night_writer = NightWrite.new
+
+    expected = [["..", "0.", "00", "00", "0.", "0.", ".0"], ["..", "..", ".0", ".0", "00", ".0", "00"], [".0", "..", "0.", "..", "0.", "..", ".0"]]
+    braille_values = [["..", "..", ".0"], ["0.", "..", ".."], ["00", ".0", "0."], ["00", ".0", ".."], ["0.", "00", "0."], ["0.", ".0", ".."], [".0", "00", ".0"]]
+
+    assert_equal expected, night_writer.format_translation(braille_values)
+  end
+
+  def test_format_lines
+    night_writer = NightWrite.new
+
+    three_lines = [["..", "0.", "00", "00", "0.", "0.", ".0"], ["..", "..", ".0", ".0", "00", ".0", "00"], [".0", "..", "0.", "..", "0.", "..", ".0"]]
+    expected = ["..0.00000.0..0", ".....0.000.000", ".0..0...0....0"]
+
+    assert_equal expected, night_writer.format_lines(three_lines)
+  end
+
+  def test_length_checker
+    night_writer = NightWrite.new
+
+    strings = ["0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.", "....................................................................................", "...................................................................................."]
+    expected = "0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.
+....................................................................................
+....................................................................................
+0.0.
+....
+...."
+
+    assert_equal expected, night_writer.length_checker(strings)
   end
 
 
