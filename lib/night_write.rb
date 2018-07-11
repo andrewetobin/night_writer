@@ -3,28 +3,25 @@ require_relative 'braille_hash'
 
 class NightWrite
   include BrailleHash
-  attr_reader :line_1, :line_2, :line_3, :file_io, :all_lines
-  attr_accessor :braille
+  attr_reader :file_io, :all_lines
 
   def initialize
     @alpha_to_braille = BrailleHash.braille_hash
-    @line_1 = []
-    @line_2 = []
-    @line_3 = []
     @file_io = FileIO.new
   end
 
   def encode_file_to_braille
     plain = file_io.read.chomp
-    @braille = encode_to_braille(plain)
+    braille = encode_to_braille(plain)
     file_io.write(braille)
   end
 
   def encode_to_braille(input)
     parsed = parse_text(input)
     braille_values = translate(parsed)
-    format_translation(braille_values)
-    format_lines
+    three_lines = format_translation(braille_values)
+    strings = format_lines(three_lines)
+    length_checker(strings)
   end
 
   def parse_text(text)
@@ -45,33 +42,32 @@ class NightWrite
   end
 
   def format_translation(braille_values)
-    formated = braille_values.map do |array|
-      @line_1 << array[0]
-      @line_2 << array[1]
-      @line_3 << array[2]
-    end
+    braille_values.transpose
   end
 
-  def format_lines
-    line_1_as_string = line_1.join('')
-    line_2_as_string = line_2.join('')
-    line_3_as_string = line_3.join('')
-    @all_lines = [line_1_as_string, line_2_as_string, line_3_as_string]
+  def format_lines(three_lines)
+    lines = []
+    three_lines.each do |line|
+      lines << line.join
+    end
+    lines
+  end
 
-    if line_1_as_string.length > 80
-      format_long_lines
+  def length_checker(strings)
+    if strings[0].length > 80
+      format_long_lines(strings)
     else
-      all_lines.join("\n")
+      strings.join("\n")
     end
   end
 
-  def format_long_lines
+  def format_long_lines(strings)
     excess_lines = []
-    all_lines.map do |line|
+    strings.map do |line|
       line[0..79]
       excess_lines << line[80..-1]
     end
-    @all_lines += excess_lines
-    all_lines.join("\n")
+    strings += excess_lines
+    strings.join("\n")
   end
 end
