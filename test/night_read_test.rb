@@ -33,7 +33,7 @@ class NightReadTest < Minitest::Test
     chunks = [["..", ".0", "0.", "00"], ["..", "00", ".0", ".."], [".0", "0.", "0.", "0."]]
 
     nr.braille_keys(chunks)
-    assert_equal expected, nr.braille_letters
+    assert_equal expected, nr.braille_keys(chunks)
   end
 
   def test_translate_to_english
@@ -50,5 +50,12 @@ class NightReadTest < Minitest::Test
 
     letters_in_english = ["caps", "t", "i", "g", "e", "r", " ", "caps", "w", "o", "o", "d", "s"]
     assert_equal "Tiger Woods", nr.capitalize(letters_in_english)
+  end
+
+  def test_integration
+    nr = NightRead.new
+    braille = "..000.0.0.0.0.000.\n.....00..000...0.0\n.0..0.0.0.0.....0."
+
+    assert_equal "Colorado", nr.encode_to_english(braille)
   end
 end

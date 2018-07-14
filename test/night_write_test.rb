@@ -28,7 +28,6 @@ class NightWriteTest < Minitest::Test
 
   def test_it_can_encode_upcase_letters
     night_writer = NightWrite.new
-    # night_writer_2 = NightWrite.new
     assert_equal "..0.\n....\n.0..", night_writer.encode_to_braille("A")
     assert_equal "..0.\n..00\n.0..", night_writer.encode_to_braille("H")
   end
@@ -63,6 +62,13 @@ class NightWriteTest < Minitest::Test
 ...."
 
     assert_equal expected, night_writer.length_checker(strings)
+  end
+
+  def test_integration
+    night_writer = NightWrite.new
+
+    expected = "..000.0.0.0.0.000.\n.....00..000...0.0\n.0..0.0.0.0.....0."
+    assert_equal expected, night_writer.encode_to_braille("Colorado")
   end
 
 

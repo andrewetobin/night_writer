@@ -70,4 +70,5 @@ class NightWrite
     strings += excess_lines
     strings.join("\n")
   end
+
 end
